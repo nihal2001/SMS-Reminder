@@ -2,7 +2,8 @@
 Gets information from API and stores it
 '''
 
-# Import the Canvas class
+import json
+import requests
 from canvasapi import Canvas
 
 # Canvas API URL
@@ -15,5 +16,15 @@ headers = {'Authorization': 'Bearer %s' % API_KEY}
 # Initialize a new Canvas object
 canvas = Canvas(API_URL, API_KEY)
 
-myCourses = canvas.get("https://canvas.vt.edu/api/v1/courses", headers=headers, params={'enrollment_state':'active', 'include':['term']}).json()
-print(myCourses)
+my_Courses = requests.get("https://canvas.vt.edu/api/v1/courses", 
+    headers=headers, params={'enrollment_state':'active', 'include':['term']}).json()
+
+##out_file = open("courses.json", "w")
+
+current_Courses = []
+for course in my_Courses:
+    if (course['term']['name'] == "2022 Spring"):
+        current_Courses.append(course['name'])
+##json.dump(my_Courses, out_file, indent=6)
+##out_file.close()
+print(current_Courses)
